@@ -1,0 +1,24 @@
+name: Deploy CI
+on:
+  push:
+    branches: [main]
+
+jobs:
+  ci-backend:
+    uses: ./.github/workflows/ci-backend.yml
+  ci-frontend:
+    uses: ./.github/workflows/ci-frontend.yml
+
+  deploy-staging:
+    needs: [ci-backend, ci-frontend]
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - run: echo "terraform apply or something"
+
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - run: echo "terraform apply or something"
