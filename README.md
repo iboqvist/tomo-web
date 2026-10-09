@@ -32,3 +32,7 @@ cd frontend && bun install && bun run dev   # http://localhost:5173
 cd backend && uv run ruff check . && uv run pytest
 cd frontend && bun install && bun run check && bun run build
 ```
+
+## Terraform
+
+See [terraform/README.md](terraform/README.md)
