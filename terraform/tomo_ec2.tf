@@ -7,7 +7,7 @@ module "tomo_ec2" {
   name = "${var.project_name}-instance"
 
   ami = data.aws_ami.ubuntu.id
-  instance_type = "t4g.small"
+  instance_type = "t3.small"
 
   subnet_id = module.vpc.public_subnets[0]
 
@@ -20,6 +20,10 @@ module "tomo_ec2" {
                                   "allow-ssh": { "cidr_ipv4": "0.0.0.0/0", "description": "SSH-From-Any", "from_port": 22, "to_port": 22, "ip_protocol": "tcp" }}
 
   key_name = "sigstore-kyverno-aws-playground"
+
+  user_data = templatefile("${path.module}/user_data.sh.tftpl", {
+    docker_compose_file = file("${path.module}/compose.yaml")
+  })
 
   root_block_device = {
     type = "gp3"
