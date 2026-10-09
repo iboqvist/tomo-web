@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+export DEBIAN_FRONTEND=noninteractive
+
+for _ in {1..10}; do
+  sudo apt-get update && sudo apt-get upgrade -y && break
+  sleep 5
+done
+
+sudo apt-get install -y docker.io docker-compose
+
+mkdir $HOME/tomo
+
+cat > $HOME/tomo/compose.yaml <<'EOF'
+${docker_compose_file}
+EOF
+
+cd $HOME/tomo
+sudo docker-compose up --quiet-pull --detach
