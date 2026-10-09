@@ -1,0 +1,26 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql://tomo:tomo@db/tomo
+    depends_on:
+      - db
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: tomo
+      POSTGRES_PASSWORD: tomo
+      POSTGRES_DB: tomo
+    volumes:
+      - pgdata:/var/lib/postgresql
+    ports:
+      - "5433:5432"
+
+volumes:
+  pgdata:

@@ -1,33 +1,18 @@
 import os
 
-import boto3
+import psycopg
 import pytest
 from fastapi.testclient import TestClient
-from moto import mock_aws
 
-os.environ |= {
-    "AWS_ACCESS_KEY_ID": "test",
-    "AWS_SECRET_ACCESS_KEY": "test",
-    "AWS_DEFAULT_REGION": "eu-north-1",
-    "TABLE_NAME": "tomo-test",
-}
-os.environ.pop("AWS_ENDPOINT_URL_DYNAMODB", None)
-
-from app.main import app, table  # noqa: E402
+from app.main import app, init_db
 
 
 @pytest.fixture
 def client():
-    with mock_aws():
-        table.cache_clear()
-        boto3.client("dynamodb").create_table(
-            TableName="tomo-test",
-            KeySchema=[{"AttributeName": "id", "KeyType": "HASH"}],
-            AttributeDefinitions=[{"AttributeName": "id", "AttributeType": "S"}],
-            BillingMode="PAY_PER_REQUEST",
-        )
-        yield TestClient(app)
-    table.cache_clear()
+    init_db()
+    with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
+        conn.execute("TRUNCATE sessions")
+    yield TestClient(app)
 
 
 def test_health(client):
