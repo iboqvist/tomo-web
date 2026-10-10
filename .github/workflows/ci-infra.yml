@@ -1,7 +1,12 @@
 # https://github.com/hashicorp/setup-terraform#usage
 
 name: Infra CI
-on: [pull_request, workflow_call]
+on:
+  workflow_call:
+  pull_request:
+    paths:
+      - 'terraform/**'
+      - '.github/workflows/ci-infra.yml'
 
 jobs:
   check:
