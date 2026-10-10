@@ -1,20 +1,22 @@
 # The Cloud Infrastrucutr
 
-Terraform is used to deploy the containerised webapp on AWS. With the docker compose file and bash script it sets up the machine to deploy the app. The code will be extended to set up CloudFront, mainly as a reverse proxy.
+Terraform is used to deploy the containerised webapp on AWS. With the docker compose file and bash script it sets up the machine to deploy the app. It also sets up CloudFront, mainly as a reverse proxy.
 
 To test the code, install `aws cli` and `terraform` first. Then:
 
 ```bash
 aws configure # Configure AWS CLI with an access token
+```
+
+Clone the repo and CD into `./terraform`
+```bash
 terraform init # Pulls necessary dependency packages for the terraform code and inits the backend
 terraform apply # Set up the infrastructure
-# Terraform will output the ip address where the webapp is reachable on (http port 80)
+# Terraform will output the cloudfront link where the webapp can be viewed
 terraform destroy # to tear down the deployment
 ```
 
-A known issue is that the s3 backend isn't used correctly, instead, terraform use the default local backend.
-
-A note of warning is that the ec2 security group allows tcp/80 and tcp/22 from any ip curently.
+**A known issue is that the s3 backend isn't used correctly, instead, terraform use the default local backend.**
 
 ## The Terraform Code
 
@@ -28,7 +30,7 @@ A (popular) solution to this problem is to store the backend in a S3 bucket. In 
 
 # EC2 Instance
 
-The EC2 Instance is currently set up to Allow HTTP and SSH from any ip but will soon be closed down to only allow http from CloudFront and managment traffic through Sesion Manager.
+The EC2 Instance only allows http/80 from the cloudfront distribution. To connect into the instance, use Session Manager.
 
 # VPC
 Nothing special going on with the VPC Really. Instances are given DNS names, including publicly resolvable names.
