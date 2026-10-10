@@ -2,6 +2,10 @@ name: Deploy CI
 on:
   push:
     branches: [main]
+    paths:
+      - 'backend/**'    # Trigger only when relevant files are changed
+      - 'frontend/**'
+      - '.github/workflows/cd-deploy.yml'
 
 jobs:
   ci-backend:
@@ -42,7 +46,4 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository }}/${{ matrix.service }}:latest
-            ghcr.io/${{ github.repository }}/${{ matrix.service }}${{ github.sha }}
-
-# TODO: Terraform deploy
-
+            ghcr.io/${{ github.repository }}/${{ matrix.service }}:${{ github.sha }}

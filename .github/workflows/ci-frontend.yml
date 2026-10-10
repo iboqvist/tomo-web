@@ -1,5 +1,10 @@
 name: Frontend CI
-on: [pull_request, workflow_call]
+on:
+  workflow_call:
+  pull_request:
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/ci-frontend.yml'
 jobs:
   check:
     runs-on: ubuntu-latest
