@@ -1,9 +1,28 @@
+# https://github.com/hashicorp/setup-terraform#usage
+
 name: Infra CI
 on: [pull_request, workflow_call]
+
 jobs:
-  test:
+  check:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Run tests
-        run: echo "tests go here"
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: hashicorp/setup-terraform@v4
+
+      # Check to see if the canonical format and style are correct
+      - name: Format check
+        run: terraform fmt -check  # Check only, no reformatting
+        continue-on-error: true
+
+      - name: terraform Init
+        id: init
+        run: terraform init -backend=false -input=false # Backend is not needed for fmt and validate
+
+      # Check to see that the code is syntactitcally valid
+      - name: terraform validate
+        id: validate
+        run: terraform validate -no-color
