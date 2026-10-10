@@ -16,10 +16,13 @@ module "tomo_ec2" {
   create_security_group         = true
   security_group_description    = "HTTP and SSH in all out"
   security_group_egress_rules   = {"allow-all": { "cidr_ipv4": "0.0.0.0/0", "description": "Allow all", "ip_protocol": "-1" }}
-  security_group_ingress_rules  = {"http": { "cidr_ipv4": "0.0.0.0/0", "description": "HTTP from any", "from_port": 80, "to_port": 80, "ip_protocol": "tcp" },
-                                  "allow-ssh": { "cidr_ipv4": "0.0.0.0/0", "description": "SSH-From-Any", "from_port": 22, "to_port": 22, "ip_protocol": "tcp" }}
+  security_group_ingress_rules  = {"http": { "cidr_ipv4": "0.0.0.0/0", "description": "HTTP from any", "from_port": 80, "to_port": 80, "ip_protocol": "tcp" } }
 
-  key_name = "sigstore-kyverno-aws-playground"
+  # Session Manager instead of ssh
+  create_iam_instance_profile = true
+  iam_role_policies = {
+    AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  }
 
   user_data = templatefile("${path.module}/user_data.sh.tftpl", {
     docker_compose_file = file("${path.module}/compose.yaml")
