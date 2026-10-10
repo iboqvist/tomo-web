@@ -11,12 +11,10 @@ module "tomo_ec2" {
 
   subnet_id = module.vpc.public_subnets[0]
 
-  create_eip = true
-
   create_security_group         = true
-  security_group_description    = "HTTP and SSH in all out"
+  security_group_description    = "Security group for ${var.project_name} EC2 instance"
   security_group_egress_rules   = {"allow-all": { "cidr_ipv4": "0.0.0.0/0", "description": "Allow all", "ip_protocol": "-1" }}
-  security_group_ingress_rules  = {"http": { "cidr_ipv4": "0.0.0.0/0", "description": "HTTP from any", "from_port": 80, "to_port": 80, "ip_protocol": "tcp" } }
+  security_group_ingress_rules  = {"http-from-cloudfront": { "prefix_list_id": data.aws_ec2_managed_prefix_list.cloudfront.id, "description": "HTTP from CloudFront", "from_port": 80, "to_port": 80, "ip_protocol": "tcp" } }
 
   # Session Manager instead of ssh
   create_iam_instance_profile = true
