@@ -3,8 +3,7 @@
 A minimal Pomodoro timer. Start a 25-minute timer; each finished or stopped session is saved and listed.
 
 ```
-Browser ──> CloudFront ──┬── /*      ──> S3 (frontend)
-                         └── /api/*  ──> API Gateway ──> Lambda (backend) ──> DynamoDB
+Browser ──> CloudFront ──> EC2 instance on AWS [frontend (nginx, static web UI) -> backend (FastAPI) -> db (Postgres)]
 ```
 
 - `frontend/`: Svelte + Vite static site
