@@ -128,7 +128,7 @@
   }
   ul {
     list-style: none;
-    padding: 0;
+    padding: 5;
     text-align: left;
   }
   li {
