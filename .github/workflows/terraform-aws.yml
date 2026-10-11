@@ -1,0 +1,50 @@
+# https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#workflow_dispatch
+
+name: terraform-aws
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Apply to deploy/update | Destroy to remove everything"
+        type: choice
+        options:
+          - apply
+          - destroy
+        default: apply
+
+# Disable concurrent dispatch to prevent inconsistent state issues
+# https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency
+concurrency:
+  group: terraform
+  cancel-in-progress: false
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25   # It shouldn't take more than ~15 minutes
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: terraform
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: hashicorp/setup-terraform@v4
+
+      - name: terraform Init
+        run: terraform init -input=false
+
+      - name: terraform apply
+        if: inputs.action == 'apply'
+        run: terraform apply -auto-approve -input=false
+
+      - name: terraform destroy
+        if: inputs.action == 'destroy'
+        run: terraform destroy -auto-approve -input=false
