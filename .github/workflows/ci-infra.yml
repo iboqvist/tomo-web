@@ -24,7 +24,6 @@ jobs:
       # Check to see if the canonical format and style are correct
       - name: Format check
         run: terraform fmt -check  # Check only, no reformatting
-        continue-on-error: true
 
       - name: terraform Init
         id: init
