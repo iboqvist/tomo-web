@@ -16,6 +16,8 @@ module "tomo_ec2" {
   security_group_egress_rules   = {"allow-all": { "cidr_ipv4": "0.0.0.0/0", "description": "Allow all", "ip_protocol": "-1" }}
   security_group_ingress_rules  = {"http-from-cloudfront": { "prefix_list_id": data.aws_ec2_managed_prefix_list.cloudfront.id, "description": "HTTP from CloudFront", "from_port": 80, "to_port": 80, "ip_protocol": "tcp" } }
 
+  user_data_replace_on_change = true
+
   # Session Manager instead of ssh
   create_iam_instance_profile = true
   iam_role_policies = {
