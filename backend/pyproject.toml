@@ -13,7 +13,7 @@ dependencies = [
 dev = [
   "httpx~=0.28",
   "pyrefly>=1.3.2",
-  "pytest~=8.4",
+  "pytest~=9.0",
   "ruff~=0.14",
 ]
 
