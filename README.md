@@ -32,6 +32,14 @@ cd backend && uv run ruff check . && uv run pytest
 cd frontend && bun install && bun run check && bun run build
 ```
 
-## Terraform
+## Deploy to AWS
 
-See [terraform/README.md](terraform/README.md)
+The infrastructure is in `terraform/` and is deployed with the `terraform-aws` workflow.
+
+1. Go to **Actions** -> **terraform-aws** -> **Run workflow**
+2. Select apply and run. It completes in ~10 minutes
+3. When its done, open the run. **The website link is found at the end of the *terraform apply* actions log**
+
+To teard down, run the same workflow with `destroy` instead.
+
+New container images pushed by `Deploy CI` from `main` are automaitcally picked up by the AWS infrastructure.
