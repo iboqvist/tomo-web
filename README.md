@@ -43,3 +43,6 @@ The infrastructure is in `terraform/` and is deployed with the `terraform-aws` w
 To teard down, run the same workflow with `destroy` instead.
 
 New container images pushed by `Deploy CI` from `main` are automaitcally picked up by the AWS infrastructure.
+
+## Report
+The Report can be found in [report/DD2482_Project_Report.pdf](report/DD2482_Project_Report.pdf)
